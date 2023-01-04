@@ -4,9 +4,10 @@ const GlobalStyle = createGlobalStyle`
 :root {
   --background: #fff;
   --main-color: #B5D5C5;
-  --point-color: #ECA869;
+  --background-color: #F5F5DC;
   --font-color: #222222;
-  --hover-color: #F5F5DC;
+  --hover-color: #ECA869;
+  --hover-point-color: #B08BBB;
   --border-color:#B2B2B2;
 }
 * {

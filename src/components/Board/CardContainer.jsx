@@ -6,13 +6,13 @@ import { setDelay } from '../../utils/setDelay';
 import { useAddCard } from './hooks/useAddCard';
 
 const CardContainer = ({ issues, title }) => {
-  const addCard = useAddCard(title);
+  const handleAddCard = useAddCard(title);
 
   return (
     <Wrapper>
       <Menu>
         <span>{getContainerStatus(title)}</span>
-        <AddBtn onClick={() => setDelay(addCard)}>
+        <AddBtn onClick={() => setDelay(handleAddCard)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

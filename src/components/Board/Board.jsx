@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 
-import Button from '../Common/Button';
+import { useRecoilValue } from 'recoil';
+import { issuesAtom } from '../../atoms/issuesAtom';
+import Button from '../@common/Button';
 import CardContainer from './CardContainer';
 
 const Board = () => {
+  const issues = useRecoilValue(issuesAtom);
+  const titles = Object.keys(issues);
   return (
     <Wrapper>
       <Menu>
@@ -11,9 +15,9 @@ const Board = () => {
         <Button />
       </Menu>
       <BoardWrapper>
-        <CardContainer />
-        <CardContainer />
-        <CardContainer />
+        <CardContainer issues={issues.todo} title={titles[0]} />
+        <CardContainer issues={issues.inProgress} title={titles[1]} />
+        <CardContainer issues={issues.done} title={titles[2]} />
       </BoardWrapper>
     </Wrapper>
   );

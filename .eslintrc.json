@@ -64,7 +64,8 @@
     "react/prop-types": ["off"], // propTypes 설정하지 않아도 됨
     "react/function-component-definition": [
       {
-        "namedComponents": "arrow-function"
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
       }
     ]
   },

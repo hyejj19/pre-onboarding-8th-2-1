@@ -1,42 +1,22 @@
 import styled from 'styled-components';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { issuesAtom } from '../../atoms/issuesAtom';
-import { users } from '../../mock/Issues';
+import { PERSON_IN_CHARGE as users } from '../../constants/issue';
 import { useDeleteCard } from './hooks/useDeleteCard';
-import { setDelay } from '../../utils/setDelay';
-import { issuesAPI } from '../../api/issues';
+import { useDelay } from '../../hooks/useDelay';
+import { modalAtom } from '../../atoms/modal';
 
 const Card = ({ issue, handleDragStart, handleDragEnd, handleDragOver, handleDrop, idx }) => {
   const handleDeleteCard = useDeleteCard(issue, issue.id);
-  const [issues, setIssues] = useRecoilState(issuesAtom);
-
-  const [isEditMode, setIsEditMode] = useState({
-    title: false,
-    personInCharge: false,
-    dueDate: false,
-  });
-
-  const titleRef = useRef(null);
-  const cardRef = useRef(null);
-
-  const handleEditMode = (subject) => {
-    setIsEditMode({
-      ...isEditMode,
-      ...{ [subject]: !isEditMode[subject] },
-    });
-    issuesAPI.setIssues(issues);
-  };
-
-  useEffect(() => {
-    if (isEditMode.title) titleRef.current.focus();
-  }, [isEditMode]);
-
+  const [modal, setModal] = useRecoilState(modalAtom);
   const [titleValue, setTitleValue] = useState(issue.title);
 
-  const handleTitleValue = (e) => {
-    setTitleValue(e.target.value);
+  const { isLoaing, setDelay } = useDelay();
+
+  const handleModalOpen = () => {
+    setModal({ isModalOpen: true, issue });
   };
 
   return (
@@ -46,23 +26,26 @@ const Card = ({ issue, handleDragStart, handleDragEnd, handleDragOver, handleDro
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      ref={cardRef}
       className={`card ${issue.status}`}
       data-position={idx}
       data-status={issue.status}>
-      {isEditMode.title ? (
-        <IssueTitle
-          type="text"
-          value={titleValue}
-          onBlur={() => handleEditMode('title')}
-          onKeyDown={(e) => e.key === 'Enter' && handleEditMode('title')}
-          ref={titleRef}
-          onChange={handleTitleValue}
-        />
-      ) : (
-        <div onClick={() => handleEditMode('title')}>{titleValue}</div>
-      )}
+      <div>{titleValue}</div>
 
+      <EditBtn onClick={() => setDelay(handleModalOpen)}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-6 h-6">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+          />
+        </svg>
+      </EditBtn>
       <DeleteBtn onClick={() => setDelay(handleDeleteCard)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -78,6 +61,7 @@ const Card = ({ issue, handleDragStart, handleDragEnd, handleDragOver, handleDro
           />
         </svg>
       </DeleteBtn>
+
       <span>{users[issue.personInCharge]}</span>
       <span>{issue.dueDate}</span>
     </Wrapper>
@@ -100,6 +84,10 @@ const DeleteBtn = styled.div`
       transition: all linear 0.1s;
     }
   }
+`;
+
+const EditBtn = styled(DeleteBtn)`
+  bottom: 5px;
 `;
 
 const Wrapper = styled.div`
@@ -126,8 +114,4 @@ const Wrapper = styled.div`
       visibility: visible;
     }
   }
-`;
-
-const IssueTitle = styled.input`
-  margin-right: 15px;
 `;

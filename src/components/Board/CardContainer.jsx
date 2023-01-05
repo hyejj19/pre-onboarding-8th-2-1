@@ -1,15 +1,16 @@
-import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useDelay } from '../../hooks/useDelay';
 
 import Card from '../Card/Card';
-import { getContainerStatus } from './getContainerStatus';
-import { setDelay } from '../../utils/setDelay';
+import { getContainerStatus } from '../../utils/getContainerStatus';
 import { useAddCard } from './hooks/useAddCard';
 import { useDnD } from './hooks/useDnD';
 
 const CardContainer = ({ issues, status }) => {
   const handleAddCard = useAddCard(status);
   const { handleDragStart, handleDragOver, handleDrop, handleDragEnter, handleDragEnd } = useDnD(status);
+
+  const { isLoaing, setDelay } = useDelay();
 
   return (
     <Wrapper
@@ -22,10 +23,7 @@ const CardContainer = ({ issues, status }) => {
       data-status={status}>
       <Menu>
         <span>{getContainerStatus(status)}</span>
-        <AddBtn
-          onClick={() => {
-            setDelay(handleAddCard);
-          }}>
+        <AddBtn onClick={() => setDelay(handleAddCard)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -60,7 +58,7 @@ export default CardContainer;
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 100px;
+  min-height: 400px;
   padding: 0.5rem;
 `;
 

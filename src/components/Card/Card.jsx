@@ -8,7 +8,7 @@ import { useDeleteCard } from './hooks/useDeleteCard';
 import { setDelay } from '../../utils/setDelay';
 import { issuesAPI } from '../../api/issues';
 
-const Card = ({ issue, handleDragStart, handleDragEnd, handleDragOver, handleDragEnter, handleDrop, idx }) => {
+const Card = ({ issue, handleDragStart, handleDragEnd, handleDragOver, handleDrop, idx }) => {
   const handleDeleteCard = useDeleteCard(issue, issue.id);
   const [issues, setIssues] = useRecoilState(issuesAtom);
 
@@ -45,7 +45,6 @@ const Card = ({ issue, handleDragStart, handleDragEnd, handleDragOver, handleDra
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
       onDrop={handleDrop}
       ref={cardRef}
       className={`card ${issue.status}`}

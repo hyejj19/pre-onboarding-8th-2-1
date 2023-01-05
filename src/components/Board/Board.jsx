@@ -7,7 +7,7 @@ import CardContainer from './CardContainer';
 
 const Board = () => {
   const issues = useRecoilValue(issuesAtom);
-  const titles = Object.keys(issues);
+  const status = Object.keys(issues);
   return (
     <Wrapper>
       <Menu>
@@ -15,9 +15,9 @@ const Board = () => {
         <Button />
       </Menu>
       <BoardWrapper>
-        <CardContainer issues={issues.todo} title={titles[0]} />
-        <CardContainer issues={issues.inProgress} title={titles[1]} />
-        <CardContainer issues={issues.done} title={titles[2]} />
+        <CardContainer issues={issues.todo} status={status[0]} />
+        <CardContainer issues={issues.inProgress} status={status[1]} />
+        <CardContainer issues={issues.done} status={status[2]} />
       </BoardWrapper>
     </Wrapper>
   );
@@ -55,10 +55,8 @@ const BoardWrapper = styled.div`
 
   @media screen and (max-width: 500px) {
     flex-direction: column;
-    justify-content: center;
   }
   @media screen and (min-width: 501px) {
     flex-direction: row;
-    align-items: center;
   }
 `;

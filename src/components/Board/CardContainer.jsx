@@ -1,18 +1,29 @@
 import styled from 'styled-components';
+import { useDelay } from '../../hooks/useDelay';
 
 import Card from '../Card/Card';
-import { getContainerStatus } from './getContainerStatus';
-import { setDelay } from '../../utils/setDelay';
+import { getContainerStatus } from '../../utils/getContainerStatus';
 import { useAddCard } from './hooks/useAddCard';
+import { useDnD } from './hooks/useDnD';
 
-const CardContainer = ({ issues, title }) => {
-  const addCard = useAddCard(title);
+const CardContainer = ({ issues, status }) => {
+  const handleAddCard = useAddCard(status);
+  const { handleDragStart, handleDragOver, handleDrop, handleDragEnter, handleDragEnd } = useDnD(status);
+
+  const { isLoaing, setDelay } = useDelay();
 
   return (
-    <Wrapper>
+    <Wrapper
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onDragEnter={handleDragEnter}
+      className={`cardContainer ${status}`}
+      data-status={status}>
       <Menu>
-        <span>{getContainerStatus(title)}</span>
-        <AddBtn onClick={() => setDelay(addCard)}>
+        <span>{getContainerStatus(status)}</span>
+        <AddBtn onClick={() => setDelay(handleAddCard)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -26,8 +37,16 @@ const CardContainer = ({ issues, title }) => {
       </Menu>
 
       <CardWrapper>
-        {issues.map((issue) => (
-          <Card key={issue.id} issue={issue} />
+        {issues.map((issue, idx) => (
+          <Card
+            key={issue.id}
+            issue={issue}
+            idx={idx}
+            handleDragStart={handleDragStart}
+            handleDragEnd={handleDragEnd}
+            handleDragOver={handleDragOver}
+            handleDrop={handleDrop}
+          />
         ))}
       </CardWrapper>
     </Wrapper>
@@ -39,6 +58,7 @@ export default CardContainer;
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+  min-height: 400px;
   padding: 0.5rem;
 `;
 

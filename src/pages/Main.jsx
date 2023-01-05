@@ -1,8 +1,18 @@
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import Board from '../components/Board/Board';
+import { issuesAtom } from '../atoms/issuesAtom';
+import { issuesAPI } from '../api/issues';
 
 const Main = () => {
+  // 컴포넌트 첫 렌더링 & issues 가 업데이트 될 때마다 로컬 스토리지 저장
+  const issues = useRecoilValue(issuesAtom);
+  useEffect(() => {
+    issuesAPI.setIssues(issues);
+  }, [issues]);
+
   return (
     <MainPage>
       <MainWrapper>
